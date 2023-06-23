@@ -1,0 +1,37 @@
+version: "2.1"
+
+services:
+  tls-check:
+    image: golang:1.19
+    ports:
+      - 5555:5555
+    volumes:
+      - ./tls-check:/tls-check
+    command: sh -c "cd /tls-check && nohup sh ./build.sh"
+
+  caddy:
+    image: caddy/caddy:2.6.2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./site:/srv
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+
+  typesense:
+    image: typesense/typesense:0.24.1
+    restart: on-failure
+    ports:
+      - "8108:8108"
+    volumes:
+      - ./typesense_data:/data
+    command: "--data-dir /data --api-key=xyz --enable-cors"
+
+volumes:
+  caddy_data:
+  caddy_config:
+  typesense_data:

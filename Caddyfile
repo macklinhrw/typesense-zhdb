@@ -1,0 +1,48 @@
+{
+    on_demand_tls {
+        ask http://tls-check:5555
+        
+        burst 5
+        interval 2m
+    }
+}
+
+audio.macklin.io {
+    tls {
+        on_demand
+    }
+
+    reverse_proxy audiobookshelf:80 {
+        header_down Strict-Transport-Security max-age=31536000;
+    }
+}
+
+jelly.macklin.io {
+    tls {
+        on_demand
+    }
+
+    reverse_proxy jellyfin:8096 {
+        header_down Strict-Transport-Security max-age=31536000;
+    }
+}
+
+books.macklin.io {
+    tls {
+        on_demand
+    }
+
+    reverse_proxy calibre-web:8083 {
+        header_down Strict-Transport-Security max-age=31536000;
+    }
+}
+
+manga.macklin.io {
+    tls {
+        on_demand
+    }
+
+    reverse_proxy mango:9000 {
+        header_down Strict-Transport-Security max-age=31536000;
+    }
+}
